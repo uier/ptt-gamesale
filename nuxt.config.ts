@@ -4,5 +4,5 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
-  modules: ["@nuxtjs/eslint-module"],
+  modules: ["@nuxtjs/eslint-module", "@nuxtjs/tailwindcss", "@nuxtjs/google-fonts"],
 });
