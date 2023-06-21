@@ -1,36 +1,37 @@
 <script setup lang="ts">
-import { FlexRender, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
-import { ref } from "vue";
+import { FlexRender, createColumnHelper, getCoreRowModel, useVueTable } from "@tanstack/vue-table";
 
-const mockData = [
-  {
-    name: "薩爾達傳說 織夢島",
-    price: 900,
-    date: "2022-10-10T12:34:56.000Z",
-  },
-  {
-    name: "動物森友會",
-    price: 1000,
-    date: "2022-10-09T13:00:00.000Z",
-  },
-];
+type Price = {
+  id: number;
+  Game: { name: string | null } | null;
+  price: number | null;
+  ptt_article_id: string | null;
+  posted_at: string | null;
+};
 
-const dayjs = useDayjs();
+const props = defineProps<{
+  data: Price[];
+}>();
 
+const columnHelper = createColumnHelper<Price>();
 const columns = [
-  { accessorKey: "name", label: "遊戲名稱" },
-  { accessorKey: "price", label: "價格" },
-  { accessorKey: "date", label: "時間", accessorFn: (row) => dayjs(row.date).format("YYYY-MM-DD HH:mm:ss") },
+  columnHelper.accessor("Game.name", { header: "遊戲名稱" }),
+  columnHelper.accessor("price", { header: "價格" }),
+  columnHelper.accessor("posted_at", {
+    header: "時間",
+    cell: (v) => dayjs(v.getValue()).format("YYYY-MM-DD HH:mm:ss"),
+  }),
 ];
 
-const data = ref(mockData);
 const table = useVueTable({
   get data() {
-    return data.value;
+    return props.data;
   },
   columns,
   getCoreRowModel: getCoreRowModel(),
 });
+
+const dayjs = useDayjs();
 </script>
 
 <template>

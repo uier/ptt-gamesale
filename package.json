@@ -15,6 +15,7 @@
     "@nuxt/eslint-config": "^0.1.1",
     "@nuxtjs/eslint-module": "^4.1.0",
     "@nuxtjs/google-fonts": "^3.0.1",
+    "@nuxtjs/supabase": "^0.3.7",
     "@nuxtjs/tailwindcss": "^6.7.2",
     "@types/node": "^18",
     "daisyui": "^3.1.1",

@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     "@nuxtjs/eslint-module",
     "@nuxtjs/tailwindcss",
     "@nuxtjs/google-fonts",
+    "@nuxtjs/supabase",
     "nuxt-icon",
     "dayjs-nuxt",
   ],
