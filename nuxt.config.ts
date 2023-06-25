@@ -11,5 +11,6 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "nuxt-icon",
     "dayjs-nuxt",
+    "@vueuse/nuxt",
   ],
 });

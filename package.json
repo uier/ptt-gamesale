@@ -18,6 +18,8 @@
     "@nuxtjs/supabase": "^0.3.7",
     "@nuxtjs/tailwindcss": "^6.7.2",
     "@types/node": "^18",
+    "@vueuse/core": "^10.2.0",
+    "@vueuse/nuxt": "^10.2.0",
     "daisyui": "^3.1.1",
     "dayjs-nuxt": "^1.1.2",
     "eslint": "^8.43.0",
@@ -28,6 +30,7 @@
     "prettier": "^2.8.8"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.14",
     "@tanstack/vue-table": "^8.9.2"
   }
 }
