@@ -1,0 +1,21 @@
+{
+  "folders": [
+    {
+      "name": "project-root",
+      "path": "./"
+    },
+    {
+      "name": "supabase-functions",
+      "path": "supabase/functions"
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "supabase/functions/": true
+    },
+    "files.associations": {
+      "*.vue": "vue",
+      "vector": "cpp"
+    }
+  }
+}
