@@ -15,8 +15,10 @@ const fuseOptions = {
   },
 };
 
-export function searchGame(pattern: string, category: Category) {
+export function searchGame(pattern: string, category: Category): string | null {
   const list = games[category];
   const fuse = new Fuse(list, fuseOptions);
-  return fuse.search(pattern);
+  const results = fuse.search(pattern);
+  if (results.length === 0) return null;
+  return results[0].item;
 }

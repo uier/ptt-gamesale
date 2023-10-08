@@ -86,10 +86,12 @@ export async function extractGamesale(
   }
   const prices = (
     await Promise.allSettled(
-      result.choices[0].message.content.split("\n").map(async (line) => {
+      result.choices[0].message.content.split("\n").map(async (line: string) => {
         const [name, price, used] = line.split(",");
+        const fuzzyResult: string | null = searchGame(name, article.category as Category);
+        const game_id = fuzzyResult ? await findGameID(fuzzyResult, article.category) : null;
         return {
-          game_id: await findGameID(searchGame(name, article.category as Category), article.category),
+          game_id,
           price: parseInt(price, 10),
           condition: used === "0" ? 0 : used === "1" ? 1 : -1,
           ptt_article_id: article.id,
@@ -99,7 +101,7 @@ export async function extractGamesale(
       })
     )
   )
-    .filter((result) => result.status === "fulfilled")
-    .map((result) => (result as PromiseFulfilledResult<Price>).value);
+    .filter((result: PromiseSettledResult<Price>) => result.status === "fulfilled")
+    .map((result: PromiseSettledResult<Price>) => (result as PromiseFulfilledResult<Price>).value);
   return prices;
 }

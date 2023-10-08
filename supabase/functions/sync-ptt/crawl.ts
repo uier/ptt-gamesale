@@ -19,7 +19,7 @@ const pttFetcher = async (path: string) => {
  * @param after an unix timestamp in milliseconds
  * Example usage: fetchNewArticles(Date.parse("Sat Sep  16 22:16:00 2023 GMT+8"));
  */
-export async function fetchNewArticles(after: number) {
+export async function fetchNewArticles(after: bigint) {
   const results = [];
   let page = await getLatestPageNum();
   let stop = false;
@@ -54,7 +54,9 @@ async function fetchArticlesByPage(page: number) {
     .map((d, i) => ({ d, i }))
     .filter(({ d }) => isRejected(d))
     .map(({ i }) => articlePaths[i]);
-  console.warn("failed to fetch articles:\n", failedArticlePaths.join("\n"));
+  if (failedArticlePaths.length > 0) {
+    console.warn("failed to fetch articles:\n", failedArticlePaths.join("\n"));
+  }
   return articleResults.filter(isFulfilled).map(({ value }) => value);
 }
 
