@@ -14,7 +14,7 @@ curl -i --location --request POST 'http://localhost:54321/functions/v1/' \
   --data '{"name":"Functions"}'
 */
 
-serve(async (_req) => {
+serve(async () => {
   try {
     const connection = await pool.connect();
     try {
