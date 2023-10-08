@@ -3,6 +3,21 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface Database {
   public: {
     Tables: {
+      Crawler: {
+        Row: {
+          id: number;
+          last_crawl_timestamp: number;
+        };
+        Insert: {
+          id?: number;
+          last_crawl_timestamp?: number;
+        };
+        Update: {
+          id?: number;
+          last_crawl_timestamp?: number;
+        };
+        Relationships: [];
+      };
       Game: {
         Row: {
           created_at: string | null;
@@ -58,7 +73,14 @@ export interface Database {
           ptt_article_id?: string | null;
           trade_type?: number | null;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: "Price_game_id_fkey";
+            columns: ["game_id"];
+            referencedRelation: "Game";
+            referencedColumns: ["id"];
+          }
+        ];
       };
     };
     Views: {

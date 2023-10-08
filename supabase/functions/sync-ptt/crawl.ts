@@ -25,7 +25,7 @@ export async function fetchNewArticles(after: bigint) {
   let stop = false;
   while (!stop) {
     const articles = await fetchArticlesByPage(page);
-    const newArticles = articles.filter(({ time }) => time > after);
+    const newArticles = articles.filter(({ time }) => time > Number(after));
     results.push(...newArticles);
     stop = stop || articles.length !== newArticles.length;
     page--;
