@@ -13,4 +13,10 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     "@vueuse/nuxt",
   ],
+  dayjs: {
+    locales: ["zh-tw"],
+    plugins: ["relativeTime", "timezone"],
+    defaultLocale: "zh-tw",
+    defaultTimezone: "Asia/Taipei",
+  },
 });
