@@ -31,9 +31,7 @@ serve(async () => {
         )} to ${new Date(updateTimestamp).toLocaleString("zh-tw")}`
       );
 
-      const newPrices: Price[] = (
-        await Promise.allSettled(newArticles.map((a) => processArticle(a, findGameID)))
-      )
+      const newPrices: Price[] = (await Promise.allSettled(newArticles.map((a) => processArticle(a))))
         .filter((result) => result.status === "fulfilled")
         .map((result) => (result as PromiseFulfilledResult<Price[]>).value)
         .flat();
@@ -52,26 +50,6 @@ serve(async () => {
     return new Response(String(err?.message ?? err), { status: 500 });
   }
 });
-
-async function findGameID(name: string, platform: string): Promise<number | null> {
-  const connection = await pool.connect();
-  try {
-    const result = await connection.queryObject<{ id: number }>`
-      SELECT id FROM "Game" WHERE name = ${name} AND platform = ${platform}
-    `;
-    if (result.rows.length === 0) {
-      console.warn(`GAME_NOT_FOUND,${name},${platform}`);
-      return null;
-    } else {
-      return result.rows[0].id;
-    }
-  } catch (error) {
-    console.error("findGameID:", error);
-  } finally {
-    connection.release();
-  }
-  return null;
-}
 
 async function storeInDB(prices: Price[]) {
   const connection = await pool.connect();

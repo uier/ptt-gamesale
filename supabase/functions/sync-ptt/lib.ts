@@ -5,14 +5,10 @@ import { searchGame, type Category } from "./fuzzy.ts";
 
 export type Article = Awaited<ReturnType<typeof fetchNewArticles>>[number];
 export type Price = Database["public"]["Tables"]["Price"]["Insert"];
-export type Name2ID = (name: string, platform: string) => Promise<number | null>;
 
-export async function processArticle(
-  article: Article,
-  findGameID: Name2ID
-): Promise<Price[] | null | undefined> {
+export async function processArticle(article: Article): Promise<Price[] | null | undefined> {
   if (blacklist(article)) throw new Error("Blacklisted article");
-  return await extractGamesale(simplifyArticle(article), findGameID);
+  return await extractGamesale(simplifyArticle(article));
 }
 
 function blacklist(article: Article): boolean {
@@ -46,10 +42,7 @@ const openai = new OpenAI({
   apiKey: Deno.env.get("OPENAI_API_KEY"),
 });
 
-export async function extractGamesale(
-  article: Article,
-  findGameID: Name2ID
-): Promise<Price[] | null | undefined> {
+export async function extractGamesale(article: Article): Promise<Price[] | null | undefined> {
   const result = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -88,8 +81,7 @@ export async function extractGamesale(
     await Promise.allSettled(
       result.choices[0].message.content.split("\n").map(async (line: string) => {
         const [name, price, used] = line.split(",");
-        const fuzzyResult: string | null = searchGame(name, article.category as Category);
-        const game_id = fuzzyResult ? await findGameID(fuzzyResult, article.category) : null;
+        const game_id = searchGame(name, article.category as Category);
         return {
           game_id,
           price: parseInt(price, 10),
