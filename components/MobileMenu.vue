@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { MENU_ITEMS } from "~/types/constants";
 
 const router = useRouter();
 function navigate(path: string) {
@@ -32,17 +33,9 @@ const emit = defineEmits(["toggle-dark"]);
         class="z-50 absolute right-0 mt-2 w-36 origin-top-right rounded-md divide-y divide-neutral-content bg-base-100 shadow-lg focus:outline-none"
       >
         <div class="p-1">
-          <MenuItem v-slot="{ active }" as="div">
-            <button :class="[active && 'btn-active', 'btn btn-ghost']" @click="navigate('/')">Latest</button>
-          </MenuItem>
-          <MenuItem v-slot="{ active }" as="div">
-            <button :class="[active && 'btn-active', 'btn btn-ghost']" @click="navigate('/history')">
-              History
-            </button>
-          </MenuItem>
-          <MenuItem v-slot="{ active }" as="div">
-            <button :class="[active && 'btn-active', 'btn btn-ghost']" @click="navigate('/about')">
-              About
+          <MenuItem v-for="{ path, text } in MENU_ITEMS" :key="path" v-slot="{ active }" as="div">
+            <button :class="[active && 'btn-active', 'btn btn-ghost']" @click="navigate(path)">
+              {{ text }}
             </button>
           </MenuItem>
         </div>

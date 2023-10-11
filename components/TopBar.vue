@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useDark } from "@vueuse/core";
+import { MENU_ITEMS } from "~/types/constants";
 
 const isDark = useDark({
   selector: "html",
@@ -23,9 +24,9 @@ const isDark = useDark({
         <div class="swap-on"><Icon name="ion:sunny-outline" class="h-5 w-5" /></div>
         <div class="swap-off"><Icon name="ion:moon-outline" class="h-5 w-5" /></div>
       </label>
-      <NuxtLink to="/" class="hover:link px-4">搜尋</NuxtLink>
-      <!-- <NuxtLink to="/history" class="hover:link px-4">History</NuxtLink> -->
-      <NuxtLink to="/about" class="hover:link px-4">關於</NuxtLink>
+      <NuxtLink v-for="{ path, text } in MENU_ITEMS" :key="path" :to="path" class="hover:link px-4">
+        {{ text }}
+      </NuxtLink>
     </div>
   </div>
 </template>
