@@ -13,28 +13,46 @@ const page = computed(() => {
   return result.data;
 });
 
-const filter = ref<Filter>({});
+const filter = ref<Filter>({
+  condition: null,
+  trade_type: null,
+  platform: ["NS", "PS4", "PS5"],
+});
 
 const ROW_PER_PAGE = 10;
 
 const { data: prices } = await useAsyncData(
   "price",
   async () => {
-    const result = await client
+    let query = client
       .from("Price")
-      .select("id, game_id, Game(name, platform), price, trade_type, condition, ptt_article_id, posted_at")
+      .select(
+        "id, game_id, Game!inner (name, platform), price, trade_type, condition, ptt_article_id, posted_at",
+        {
+          count: "exact",
+        }
+      )
       .neq("game_id", 0)
-      .order("posted_at", { ascending: false })
-      .range((page.value - 1) * ROW_PER_PAGE, page.value * ROW_PER_PAGE - 1);
-    return result.data;
+      .in("Game.platform", filter.value.platform)
+      .range((page.value - 1) * ROW_PER_PAGE, page.value * ROW_PER_PAGE - 1)
+      .order("posted_at", { ascending: false });
+    if (filter.value.condition !== null) {
+      query = query.eq("condition", filter.value.condition);
+    }
+    if (filter.value.trade_type !== null) {
+      query = query.eq("trade_type", filter.value.trade_type);
+    }
+    if (filter.value.game_id !== undefined) {
+      query = query.eq("game_id", filter.value.game_id);
+    }
+    if (filter.value.name !== undefined) {
+      query = query.textSearch("Game.name", filter.value.name);
+    }
+    const result = await query;
+    return result;
   },
-  { watch: [page] }
+  { watch: [page, filter] }
 );
-
-const { data: count } = await useAsyncData("price-count", async () => {
-  const result = await client.from("Price").select("*", { count: "exact", head: true });
-  return result.count;
-});
 
 const { data: games } = await useAsyncData("games", async () => {
   const result = await client.from("Game").select("id, name, platform");
@@ -42,10 +60,10 @@ const { data: games } = await useAsyncData("games", async () => {
 });
 
 const pageCount = computed(() => {
-  if (count.value === null) {
+  if (prices.value?.count == null) {
     return 1;
   }
-  return Math.ceil(count.value / ROW_PER_PAGE);
+  return Math.ceil(prices.value.count / ROW_PER_PAGE);
 });
 
 function updatePage(p: number) {
@@ -57,34 +75,17 @@ function updatePage(p: number) {
   <div class="h-full w-full pb-10">
     <PriceFilter v-model="filter" :games="games" />
 
-    <div class="my-3 md:my-8" />
+    <div class="my-3" />
 
-    <div class="flex item-center justify-between">
-      <h1 class="text-md md:text-xl font-semibold">最新 {{ count && `：共 ${count} 筆` }}</h1>
-    </div>
+    <h1 class="pl-1 text-sm md:text-md">{{ `共 ${prices?.count || 0} 筆` }}</h1>
 
-    <div class="my-3 md:my-8" />
+    <div class="my-3" />
 
-    <LatestTable
-      :data="prices || []"
-      :page="page"
-      :count="count"
-      :page-count="pageCount"
-      @update-page="updatePage"
-    />
+    <template v-if="filter.game_id != null">
+      <PriceTrend :data="prices?.data || []" />
+      <div class="my-3" />
+    </template>
 
-    <div class="drawer drawer-end">
-      <input id="filter-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-side">
-        <label for="filter-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-        <div class="p-10">
-          <div>Condition</div>
-          <div>Trade Type</div>
-          <div>Platform</div>
-          <div>Time Range</div>
-          <div>Price Range</div>
-        </div>
-      </div>
-    </div>
+    <LatestTable :data="prices?.data || []" :page="page" :page-count="pageCount" @update-page="updatePage" />
   </div>
 </template>
