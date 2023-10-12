@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Database } from "~/types/supabase";
 import { z } from "zod";
+import { Filter } from "~/types";
 
 const client = useSupabaseClient<Database>();
 const params = useUrlSearchParams("history");
@@ -12,32 +13,57 @@ const page = computed(() => {
   return result.data;
 });
 
+const filter = ref<Filter>({
+  condition: null,
+  trade_type: null,
+  platform: ["NS", "PS4", "PS5"],
+});
+
 const ROW_PER_PAGE = 10;
 
 const { data: prices } = await useAsyncData(
   "price",
   async () => {
-    const result = await client
+    let query = client
       .from("Price")
-      .select("id, game_id, Game(name), price, trade_type, condition, ptt_article_id, posted_at")
+      .select(
+        "id, game_id, Game!inner (name, platform), price, trade_type, condition, ptt_article_id, posted_at",
+        {
+          count: "exact",
+        }
+      )
       .neq("game_id", 0)
-      .order("posted_at", { ascending: false })
-      .range((page.value - 1) * ROW_PER_PAGE, page.value * ROW_PER_PAGE - 1);
-    return result.data;
+      .in("Game.platform", filter.value.platform)
+      .range((page.value - 1) * ROW_PER_PAGE, page.value * ROW_PER_PAGE - 1)
+      .order("posted_at", { ascending: false });
+    if (filter.value.condition !== null) {
+      query = query.eq("condition", filter.value.condition);
+    }
+    if (filter.value.trade_type !== null) {
+      query = query.eq("trade_type", filter.value.trade_type);
+    }
+    if (filter.value.game_id !== undefined) {
+      query = query.eq("game_id", filter.value.game_id);
+    }
+    if (filter.value.name !== undefined) {
+      query = query.textSearch("Game.name", filter.value.name);
+    }
+    const result = await query;
+    return result;
   },
-  { watch: [page] }
+  { watch: [page, filter] }
 );
 
-const { data: count } = await useAsyncData("price-count", async () => {
-  const result = await client.from("Price").select("*", { count: "exact", head: true });
-  return result.count;
+const { data: games } = await useAsyncData("games", async () => {
+  const result = await client.from("Game").select("id, name, platform");
+  return result.data;
 });
 
 const pageCount = computed(() => {
-  if (count.value === null) {
+  if (prices.value?.count == null) {
     return 1;
   }
-  return Math.ceil(count.value / ROW_PER_PAGE);
+  return Math.ceil(prices.value.count / ROW_PER_PAGE);
 });
 
 function updatePage(p: number) {
@@ -47,22 +73,19 @@ function updatePage(p: number) {
 
 <template>
   <div class="h-full w-full pb-10">
-    <div class="flex item-center justify-between">
-      <h1 class="text-xl font-semibold">最新 {{ count && `：共 ${count} 筆` }}</h1>
+    <PriceFilter v-model="filter" :games="games" />
 
-      <button class="btn-sm btn-circle btn-info">
-        <Icon name="ion:funnel" class="h-4 w-4" />
-      </button>
-    </div>
+    <div class="my-3" />
 
-    <div class="my-3 md:my-8" />
+    <h1 class="pl-1 text-sm md:text-md">{{ `共 ${prices?.count || 0} 筆` }}</h1>
 
-    <LatestTable
-      :data="prices || []"
-      :page="page"
-      :count="count"
-      :page-count="pageCount"
-      @update-page="updatePage"
-    />
+    <div class="my-3" />
+
+    <template v-if="filter.game_id != null">
+      <PriceTrend :data="prices?.data || []" />
+      <div class="my-3" />
+    </template>
+
+    <LatestTable :data="prices?.data || []" :page="page" :page-count="pageCount" @update-page="updatePage" />
   </div>
 </template>

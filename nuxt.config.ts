@@ -4,6 +4,9 @@ export default defineNuxtConfig({
   typescript: {
     shim: false,
   },
+  build: {
+    transpile: [/echarts/],
+  },
   modules: [
     "@nuxtjs/eslint-module",
     "@nuxtjs/tailwindcss",

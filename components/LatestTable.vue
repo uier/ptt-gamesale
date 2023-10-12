@@ -1,27 +1,18 @@
 <script setup lang="ts">
 import { TRADE_TYPES, CONDITIONS } from "~/types/constants";
-
-type Price = {
-  id: number;
-  Game: { name: string | null } | null;
-  price: number | null;
-  trade_type: number | null;
-  condition: number | null;
-  ptt_article_id: string | null;
-  posted_at: string | null;
-};
+import { Price } from "~/types";
 
 defineProps<{
   data: Price[];
   page: number;
-  count: number | null;
   pageCount: number;
 }>();
 const emit = defineEmits(["update-page"]);
 
-const headers: { name: string; column: keyof Price }[] = [
+const headers: { name: string; column: string }[] = [
   { name: "", column: "trade_type" },
-  { name: "遊戲名稱", column: "Game" },
+  { name: "平台", column: "platform" },
+  { name: "遊戲", column: "name" },
   { name: "價格", column: "price" },
   { name: "品況", column: "condition" },
   { name: "時間", column: "posted_at" },
@@ -68,12 +59,16 @@ function getConditionValue(condition: Price["condition"]) {
     <tbody>
       <tr v-for="item in data" :key="item.id">
         <td>{{ getTradeTypeValue(item.trade_type) }}</td>
-        <td class="">{{ item.Game?.name }}</td>
+        <td>{{ item.Game?.platform }}</td>
+        <td>{{ item.Game?.name }}</td>
         <td>{{ item.price }}</td>
         <td>{{ getConditionValue(item.condition) }}</td>
         <td class="hidden sm:table-cell">
           <div class="tooltip" :data-tip="dayjs(item.posted_at).format('YYYY-MM-DD HH:mm:ss')">
-            {{ dayjs(item.posted_at).fromNow() }}
+            {{
+              //@ts-ignore
+              dayjs(item.posted_at).fromNow()
+            }}
           </div>
         </td>
         <td>
@@ -83,6 +78,9 @@ function getConditionValue(condition: Price["condition"]) {
             </button>
           </NuxtLink>
         </td>
+      </tr>
+      <tr v-if="data.length === 0">
+        <td :colspan="headers.length" class="text-center">查無結果</td>
       </tr>
     </tbody>
   </table>
