@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Database } from "~/types/supabase";
 import { z } from "zod";
+import { Filter } from "~/types";
 
 const client = useSupabaseClient<Database>();
 const params = useUrlSearchParams("history");
@@ -12,6 +13,8 @@ const page = computed(() => {
   return result.data;
 });
 
+const filter = ref<Filter>({});
+
 const ROW_PER_PAGE = 10;
 
 const { data: prices } = await useAsyncData(
@@ -19,7 +22,7 @@ const { data: prices } = await useAsyncData(
   async () => {
     const result = await client
       .from("Price")
-      .select("id, game_id, Game(name), price, trade_type, condition, ptt_article_id, posted_at")
+      .select("id, game_id, Game(name, platform), price, trade_type, condition, ptt_article_id, posted_at")
       .neq("game_id", 0)
       .order("posted_at", { ascending: false })
       .range((page.value - 1) * ROW_PER_PAGE, page.value * ROW_PER_PAGE - 1);
@@ -31,6 +34,11 @@ const { data: prices } = await useAsyncData(
 const { data: count } = await useAsyncData("price-count", async () => {
   const result = await client.from("Price").select("*", { count: "exact", head: true });
   return result.count;
+});
+
+const { data: games } = await useAsyncData("games", async () => {
+  const result = await client.from("Game").select("id, name, platform");
+  return result.data;
 });
 
 const pageCount = computed(() => {
@@ -47,12 +55,12 @@ function updatePage(p: number) {
 
 <template>
   <div class="h-full w-full pb-10">
-    <div class="flex item-center justify-between">
-      <h1 class="text-xl font-semibold">最新 {{ count && `：共 ${count} 筆` }}</h1>
+    <PriceFilter v-model="filter" :games="games" />
 
-      <button class="btn-sm btn-circle btn-info">
-        <Icon name="ion:funnel" class="h-4 w-4" />
-      </button>
+    <div class="my-3 md:my-8" />
+
+    <div class="flex item-center justify-between">
+      <h1 class="text-md md:text-xl font-semibold">最新 {{ count && `：共 ${count} 筆` }}</h1>
     </div>
 
     <div class="my-3 md:my-8" />
@@ -64,5 +72,19 @@ function updatePage(p: number) {
       :page-count="pageCount"
       @update-page="updatePage"
     />
+
+    <div class="drawer drawer-end">
+      <input id="filter-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-side">
+        <label for="filter-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div class="p-10">
+          <div>Condition</div>
+          <div>Trade Type</div>
+          <div>Platform</div>
+          <div>Time Range</div>
+          <div>Price Range</div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

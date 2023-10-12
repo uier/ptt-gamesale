@@ -3,7 +3,7 @@ import { TRADE_TYPES, CONDITIONS } from "~/types/constants";
 
 type Price = {
   id: number;
-  Game: { name: string | null } | null;
+  Game: { name: string | null; platform: string | null } | null;
   price: number | null;
   trade_type: number | null;
   condition: number | null;
@@ -21,7 +21,7 @@ const emit = defineEmits(["update-page"]);
 
 const headers: { name: string; column: keyof Price }[] = [
   { name: "", column: "trade_type" },
-  { name: "遊戲名稱", column: "Game" },
+  { name: "遊戲", column: "Game" },
   { name: "價格", column: "price" },
   { name: "品況", column: "condition" },
   { name: "時間", column: "posted_at" },
@@ -68,12 +68,15 @@ function getConditionValue(condition: Price["condition"]) {
     <tbody>
       <tr v-for="item in data" :key="item.id">
         <td>{{ getTradeTypeValue(item.trade_type) }}</td>
-        <td class="">{{ item.Game?.name }}</td>
+        <td>{{ (item.Game?.platform ? `[${item.Game.platform}] ` : "") + `${item.Game?.name}` }}</td>
         <td>{{ item.price }}</td>
         <td>{{ getConditionValue(item.condition) }}</td>
         <td class="hidden sm:table-cell">
           <div class="tooltip" :data-tip="dayjs(item.posted_at).format('YYYY-MM-DD HH:mm:ss')">
-            {{ dayjs(item.posted_at).fromNow() }}
+            {{
+              //@ts-ignore
+              dayjs(item.posted_at).fromNow()
+            }}
           </div>
         </td>
         <td>
