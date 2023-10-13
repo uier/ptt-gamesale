@@ -48,6 +48,7 @@ export interface Database {
           created_at: string | null;
           game_id: number | null;
           id: number;
+          parsed_name: string | null;
           posted_at: string | null;
           price: number | null;
           ptt_article_id: string | null;
@@ -58,6 +59,7 @@ export interface Database {
           created_at?: string | null;
           game_id?: number | null;
           id?: number;
+          parsed_name?: string | null;
           posted_at?: string | null;
           price?: number | null;
           ptt_article_id?: string | null;
@@ -68,6 +70,7 @@ export interface Database {
           created_at?: string | null;
           game_id?: number | null;
           id?: number;
+          parsed_name?: string | null;
           posted_at?: string | null;
           price?: number | null;
           ptt_article_id?: string | null;
