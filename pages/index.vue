@@ -46,7 +46,7 @@ const { data: prices } = await useAsyncData(
       query = query.eq("game_id", filter.value.game_id);
     }
     if (filter.value.name !== undefined) {
-      query = query.textSearch("Game.name", filter.value.name);
+      query = query.textSearch("Game.name", filter.value.name.split(" ").join(" & "));
     }
     const result = await query;
     return result;
@@ -58,6 +58,20 @@ const { data: games } = await useAsyncData("games", async () => {
   const result = await client.from("Game").select("id, name, platform");
   return result.data;
 });
+
+const { data: trend } = await useAsyncData(
+  "trend",
+  async () => {
+    if (filter.value.game_id == null) return [];
+    const result = await client
+      .from("Price")
+      .select("game_id, price, posted_at, condition, ptt_article_id")
+      .eq("game_id", filter.value.game_id)
+      .order("posted_at", { ascending: true });
+    return result.data;
+  },
+  { watch: [filter] }
+);
 
 const pageCount = computed(() => {
   if (prices.value?.count == null) {
@@ -81,8 +95,8 @@ function updatePage(p: number) {
 
     <div class="my-3" />
 
-    <template v-if="filter.game_id != null">
-      <PriceTrend :data="prices?.data || []" />
+    <template v-if="filter.game_id != null && trend">
+      <PriceTrend :data="trend" />
       <div class="my-3" />
     </template>
 

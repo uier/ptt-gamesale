@@ -15,3 +15,11 @@ export type Price = {
   ptt_article_id: string | null;
   posted_at: string | null;
 };
+
+export type Trend = {
+  game_id: number | null;
+  price: number | null;
+  posted_at: string | null;
+  condition: number | null;
+  ptt_article_id: string | null;
+};
