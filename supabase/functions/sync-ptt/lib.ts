@@ -89,6 +89,7 @@ export async function extractGamesale(article: Article): Promise<Price[] | null 
           ptt_article_id: article.id,
           posted_at: new Date(article.time).toISOString(),
           trade_type: article.title.includes("徵") ? 0 : article.title.includes("售") ? 1 : -1,
+          parsed_name: name,
         };
       })
     )

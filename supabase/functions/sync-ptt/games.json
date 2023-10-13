@@ -4981,22 +4981,6 @@
       "name": "戀愛少女與守護之盾 Re:boot The SHIELD-9"
     },
     {
-      "id": 8864,
-      "name": "Switch OLED斯普拉遁3版主機"
-    },
-    {
-      "id": 8865,
-      "name": "Switch OLED紅藍主機"
-    },
-    {
-      "id": 8866,
-      "name": "Switch OLED白色主機"
-    },
-    {
-      "id": 8867,
-      "name": "Switch 任天堂明星大亂鬥 特別版組合"
-    },
-    {
       "id": 8868,
       "name": "Switch 『超級瑪利歐 奧德賽』 組合套裝"
     },
@@ -5005,24 +4989,56 @@
       "name": "Switch Splatoon2 組合套裝"
     },
     {
-      "id": 8870,
-      "name": "Switch 精靈寶可夢 Let's Go！皮卡丘主機組合"
-    },
-    {
-      "id": 8871,
-      "name": "Switch 精靈寶可夢 Let's Go！伊布主機組合"
-    },
-    {
-      "id": 8872,
-      "name": "Switch 動物之森集合啦動物森友會限定機特仕機"
+      "id": 8874,
+      "name": "Switch Lite"
     },
     {
       "id": 8873,
-      "name": "Switch 薩爾達傳說王國之淚特仕機"
+      "name": "Switch OLED 薩爾達傳說 王國之淚 特別版主機 特仕機"
     },
     {
-      "id": 8874,
-      "name": "Switch Lite"
+      "id": 8870,
+      "name": "Switch 精靈寶可夢 Let's Go！皮卡丘主機組合 特仕機"
+    },
+    {
+      "id": 8871,
+      "name": "Switch 精靈寶可夢 Let's Go！伊布主機組合 特仕機"
+    },
+    {
+      "id": 8867,
+      "name": "Switch 任天堂明星大亂鬥 特別版 主機組合"
+    },
+    {
+      "id": 8864,
+      "name": "Switch OLED 斯普拉遁 3 特別版主機 特仕機"
+    },
+    {
+      "id": 8866,
+      "name": "Switch OLED 白色主機"
+    },
+    {
+      "id": 8865,
+      "name": "Switch OLED 紅藍主機"
+    },
+    {
+      "id": 8872,
+      "name": "Switch 集合啦！動物森友會 特別版主機 特仕機"
+    },
+    {
+      "id": 8885,
+      "name": "Switch OLED 寶可夢《朱／紫》特別版主機 特仕機"
+    },
+    {
+      "id": 8886,
+      "name": "Switch OLED 瑪利歐亮麗紅 特別版主機 特仕機"
+    },
+    {
+      "id": 8887,
+      "name": "Switch 紅藍電力加強版主機"
+    },
+    {
+      "id": 8888,
+      "name": "Switch 灰黑電力加強版主機"
     }
   ],
   "PS4": [

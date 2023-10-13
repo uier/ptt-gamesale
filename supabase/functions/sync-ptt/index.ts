@@ -55,10 +55,10 @@ async function storeInDB(prices: Price[]) {
   const connection = await pool.connect();
   for (const p of prices) {
     try {
-      const { game_id, price, posted_at, condition, trade_type, ptt_article_id } = p;
+      const { game_id, price, posted_at, condition, trade_type, ptt_article_id, parsed_name } = p;
       await connection.queryObject`
-        INSERT INTO "Price" (game_id, price, posted_at, condition, trade_type, ptt_article_id)
-        VALUES (${game_id}, ${price}, ${posted_at}, ${condition}, ${trade_type}, ${ptt_article_id})
+        INSERT INTO "Price" (game_id, price, posted_at, condition, trade_type, ptt_article_id, parsed_name)
+        VALUES (${game_id}, ${price}, ${posted_at}, ${condition}, ${trade_type}, ${ptt_article_id}, ${parsed_name})
       `;
     } catch (error) {
       console.error("storeInDB:", p, error);

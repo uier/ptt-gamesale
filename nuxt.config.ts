@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     shim: false,
   },
   build: {
-    transpile: [/echarts/],
+    transpile: [/echarts/, "resize-detector"],
   },
   modules: [
     "@nuxtjs/eslint-module",
