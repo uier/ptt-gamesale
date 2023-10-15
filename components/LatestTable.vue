@@ -10,7 +10,6 @@ defineProps<{
 const emit = defineEmits(["update-page"]);
 
 const headers: { name: string; column: string }[] = [
-  { name: "ID", column: "id" },
   { name: "", column: "trade_type" },
   { name: "平台", column: "platform" },
   { name: "遊戲", column: "name" },
@@ -59,7 +58,6 @@ function getConditionValue(condition: Price["condition"]) {
     </thead>
     <tbody>
       <tr v-for="item in data" :key="item.id">
-        <td>{{ item.id }}</td>
         <td>{{ getTradeTypeValue(item.trade_type) }}</td>
         <td>{{ item.Game?.platform }}</td>
         <td>{{ item.Game?.name }}</td>
