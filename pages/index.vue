@@ -83,11 +83,13 @@ const pageCount = computed(() => {
 function updatePage(p: number) {
   params.page = p.toString();
 }
+
+const focusedGameName = ref("");
 </script>
 
 <template>
   <div class="h-full w-full pb-10">
-    <PriceFilter v-model="filter" :games="games" />
+    <PriceFilter v-model="filter" :games="games" :table-focused-game-name="focusedGameName" />
 
     <div class="my-3" />
 
@@ -100,6 +102,12 @@ function updatePage(p: number) {
       <div class="my-3" />
     </template>
 
-    <LatestTable :data="prices?.data || []" :page="page" :page-count="pageCount" @update-page="updatePage" />
+    <LatestTable
+      v-model="focusedGameName"
+      :data="prices?.data || []"
+      :page="page"
+      :page-count="pageCount"
+      @update-page="updatePage"
+    />
   </div>
 </template>
