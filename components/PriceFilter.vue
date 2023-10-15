@@ -7,6 +7,7 @@ import { CONDITIONS, TRADE_TYPES } from "~/types/constants";
 const props = defineProps<{
   games: Pick<Database["public"]["Tables"]["Game"]["Row"], "id" | "name" | "platform">[] | null;
   modelValue: Filter;
+  tableFocusedGameName: string;
 }>();
 const emits = defineEmits(["update:modelValue"]);
 
@@ -28,6 +29,9 @@ function updateFilterBySearch() {
 }
 
 watchDebounced(search, updateFilterBySearch, { debounce: 300 });
+watchEffect(() => {
+  search.value = props.tableFocusedGameName;
+});
 
 const conditionOptions = [
   { label: "不拘", value: null },
@@ -78,6 +82,9 @@ function updateTradeType(trade_type: Filter["trade_type"]) {
           class="input input-bordered w-full join-item"
           list="games"
         />
+        <button v-if="search" class="btn btn-md btn-secondary join-item" @click="search = ''">
+          <Icon name="ion:close-round" class="h-4 w-4" />
+        </button>
         <Popover class="relative">
           <PopoverButton
             class="btn btn-md btn-accent join-item"

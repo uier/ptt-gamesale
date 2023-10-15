@@ -7,7 +7,7 @@ defineProps<{
   page: number;
   pageCount: number;
 }>();
-const emit = defineEmits(["update-page"]);
+const emit = defineEmits(["update-page", "update:modelValue"]);
 
 const headers: { name: string; column: string }[] = [
   { name: "", column: "trade_type" },
@@ -60,7 +60,14 @@ function getConditionValue(condition: Price["condition"]) {
       <tr v-for="item in data" :key="item.id">
         <td>{{ getTradeTypeValue(item.trade_type) }}</td>
         <td>{{ item.Game?.platform }}</td>
-        <td>{{ item.Game?.name }}</td>
+        <td>
+          <button
+            class="btn btn-ghost hover:btn-info btn-sm overflow-hidden px-1"
+            @click="$emit('update:modelValue', item.Game?.name)"
+          >
+            {{ item.Game?.name }}
+          </button>
+        </td>
         <td>{{ item.price }}</td>
         <td>{{ getConditionValue(item.condition) }}</td>
         <td class="hidden sm:table-cell">
