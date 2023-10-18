@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.14",
+    "@vercel/analytics": "^1.1.1",
     "echarts": "^5.4.3",
     "vue-echarts": "^6.6.1",
     "zod": "^3.22.4"
