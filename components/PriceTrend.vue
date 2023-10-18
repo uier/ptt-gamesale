@@ -15,8 +15,16 @@ const props = defineProps<{
   data: Trend[];
 }>();
 
+const isDark = useDark({
+  selector: "html",
+  attribute: "data-theme",
+  valueDark: "dracula",
+  valueLight: "light",
+});
+
 const option = computed(() => {
   return {
+    backgroundColor: isDark.value ? "#272A34" : "transparent",
     tooltip: { trigger: "axis" },
     legend: { show: true },
     grid: {
@@ -25,7 +33,7 @@ const option = computed(() => {
       bottom: 0,
       containLabel: true,
     },
-    xAxis: { type: "time" },
+    xAxis: { type: "time", axisLabel: { formatter: "{MM}/{dd}" } },
     yAxis: { type: "value" },
     series: [
       {
@@ -35,6 +43,7 @@ const option = computed(() => {
           .filter(({ condition }) => condition === CONDITIONS.USED)
           .map(({ price, posted_at, ptt_article_id }) => [+new Date(posted_at || ""), price, ptt_article_id]),
         symbol: "circle",
+        symbolSize: 7,
         smooth: 0.2,
       },
       {
@@ -44,6 +53,7 @@ const option = computed(() => {
           .filter(({ condition }) => condition === CONDITIONS.NEW)
           .map(({ price, posted_at, ptt_article_id }) => [+new Date(posted_at || ""), price, ptt_article_id]),
         symbol: "circle",
+        symbolSize: 7,
         smooth: 0.2,
       },
     ],
@@ -60,6 +70,6 @@ function handleClick(args: ECElementEvent) {
 
 <template>
   <div class="h-[300px]">
-    <v-chart :option="option" autoresize @click="handleClick" />
+    <v-chart :option="option" :theme="isDark ? 'dark' : ''" autoresize @click="handleClick" />
   </div>
 </template>

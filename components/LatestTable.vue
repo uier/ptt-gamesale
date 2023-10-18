@@ -3,6 +3,7 @@ import { TRADE_TYPES, CONDITIONS } from "~/types/constants";
 import { Price } from "~/types";
 
 defineProps<{
+  modelValue: string;
   data: Price[];
   page: number;
   pageCount: number;
