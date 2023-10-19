@@ -45,7 +45,7 @@ function getConditionValue(condition: Price["condition"]) {
 </script>
 
 <template>
-  <table class="table">
+  <table class="hidden sm:table">
     <thead>
       <tr>
         <th
@@ -58,17 +58,15 @@ function getConditionValue(condition: Price["condition"]) {
       </tr>
     </thead>
     <tbody>
-      <tr v-for="item in data" :key="item.id">
+      <tr
+        v-for="item in data"
+        :key="item.id"
+        class="hover:bg-info hover:text-info-content cursor-pointer"
+        @click="$emit('update:modelValue', item.Game?.name)"
+      >
         <td>{{ getTradeTypeValue(item.trade_type) }}</td>
         <td>{{ item.Game?.platform }}</td>
-        <td>
-          <button
-            class="btn btn-ghost hover:btn-info btn-sm overflow-hidden px-1"
-            @click="$emit('update:modelValue', item.Game?.name)"
-          >
-            {{ item.Game?.name }}
-          </button>
-        </td>
+        <td>{{ item.Game?.name }}</td>
         <td>{{ item.price }}</td>
         <td>{{ getConditionValue(item.condition) }}</td>
         <td class="hidden sm:table-cell">
@@ -81,7 +79,7 @@ function getConditionValue(condition: Price["condition"]) {
         </td>
         <td>
           <NuxtLink :to="`https://www.ptt.cc/bbs/Gamesale/${item.ptt_article_id}.html`" target="_blank">
-            <button class="btn btn-circle btn-xs sm:btn-sm btn-ghost px-0">
+            <button class="btn btn-circle btn-xs sm:btn-sm btn-ghost px-0" @click.stop="">
               <Icon name="ion:md-open" class="h-4 w-4" />
             </button>
           </NuxtLink>
@@ -92,7 +90,47 @@ function getConditionValue(condition: Price["condition"]) {
       </tr>
     </tbody>
   </table>
-  <div class="flex items-center gap-2 pb-10">
+  <div class="sm:hidden flex flex-col gap-y-2 w-full">
+    <div
+      v-for="item in data"
+      :key="item.id"
+      class="flex flex-col gap-y-1 py-2 px-3 bg-base-200 rounded-lg cursor-pointer"
+      @click="$emit('update:modelValue', item.Game?.name)"
+    >
+      <div class="flex text-sm">
+        <span
+          :class="[
+            'badge rounded-md p-1 text-xs',
+            item.trade_type === TRADE_TYPES.SELL ? 'badge-success' : 'badge-primary',
+          ]"
+          >{{ getTradeTypeValue(item.trade_type) }}</span
+        >
+        <span class="mx-2">{{ item.Game?.name }}</span>
+        <div class="flex-1" />
+        <span>${{ item.price }}</span>
+      </div>
+      <div class="flex text-xs items-center text-opacity-60">
+        <span>{{ item.Game?.platform }}</span>
+        <div class="divider divider-horizontal mx-1"></div>
+        <span>{{ getConditionValue(item.condition) }}</span>
+        <div class="divider divider-horizontal mx-1"></div>
+        <div class="tooltip tooltip-right" :data-tip="dayjs(item.posted_at).format('YYYY-MM-DD HH:mm:ss')">
+          {{
+            //@ts-ignore
+            dayjs(item.posted_at).fromNow()
+          }}
+        </div>
+        <div class="flex-1" />
+        <NuxtLink :to="`https://www.ptt.cc/bbs/Gamesale/${item.ptt_article_id}.html`" target="_blank">
+          <button class="btn btn-circle btn-xs sm:btn-sm btn-ghost px-0" @click.stop="">
+            <Icon name="ion:md-open" class="h-4 w-4" />
+          </button>
+        </NuxtLink>
+      </div>
+    </div>
+    <div v-if="data.length === 0" class="flex justify-center items-center p-4">查無結果</div>
+  </div>
+  <div class="flex items-center gap-2 pb-10 mt-3">
     <div class="join">
       <button class="join-item btn" @click="emit('update-page', 1)">«</button>
       <button class="join-item btn" @click="emit('update-page', Math.max(1, page - 1))">‹</button>
