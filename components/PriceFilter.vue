@@ -12,7 +12,7 @@ const props = defineProps<{
 const emits = defineEmits(["update:modelValue"]);
 
 const search = ref("");
-const shortcuts = ["薩爾達傳說 王國之淚", "瑪利歐賽車8 豪華版", "斯普拉遁3"];
+const shortcuts = ["薩爾達傳說 王國之淚", "瑪利歐賽車8 豪華版"];
 
 function updateFilterBySearch() {
   const text = search.value.trim();
