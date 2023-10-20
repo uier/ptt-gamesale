@@ -46,6 +46,7 @@ export interface Database {
         Row: {
           condition: number | null;
           created_at: string | null;
+          fuzzy_score: number | null;
           game_id: number | null;
           id: number;
           parsed_name: string | null;
@@ -57,6 +58,7 @@ export interface Database {
         Insert: {
           condition?: number | null;
           created_at?: string | null;
+          fuzzy_score?: number | null;
           game_id?: number | null;
           id?: number;
           parsed_name?: string | null;
@@ -68,6 +70,7 @@ export interface Database {
         Update: {
           condition?: number | null;
           created_at?: string | null;
+          fuzzy_score?: number | null;
           game_id?: number | null;
           id?: number;
           parsed_name?: string | null;

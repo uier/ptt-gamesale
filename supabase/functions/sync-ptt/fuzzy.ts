@@ -4,7 +4,7 @@ import games from "./games.json" assert { type: "json" };
 export type Category = "NS" | "PS4" | "PS5";
 
 const fuseOptions = {
-  includeScore: false,
+  includeScore: true,
   findAllMatches: false,
   ignoreLocation: true,
   keys: ["name"],
@@ -16,10 +16,10 @@ const fuseOptions = {
   },
 };
 
-export function searchGame(pattern: string, category: Category): number | null {
+export function searchGame(pattern: string, category: Category): { id: number; score: number } | null {
   const list = games[category];
   const fuse = new Fuse(list, fuseOptions);
   const results = fuse.search(pattern);
   if (results.length === 0) return null;
-  return results[0].item.id;
+  return { id: results[0].item.id, score: results[0].score };
 }

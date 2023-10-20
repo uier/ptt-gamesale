@@ -81,15 +81,16 @@ export async function extractGamesale(article: Article): Promise<Price[] | null 
     await Promise.allSettled(
       result.choices[0].message.content.split("\n").map(async (line: string) => {
         const [name, price, used] = line.split(",");
-        const game_id = searchGame(name, article.category as Category);
+        const matchedGame = searchGame(name, article.category as Category);
         return {
-          game_id,
+          game_id: matchedGame?.id,
           price: parseInt(price, 10),
           condition: used === "0" ? 0 : used === "1" ? 1 : -1,
           ptt_article_id: article.id,
           posted_at: new Date(article.time).toISOString(),
           trade_type: article.title.includes("徵") ? 0 : article.title.includes("售") ? 1 : -1,
           parsed_name: name,
+          fuzzy_score: matchedGame?.score,
         };
       })
     )
