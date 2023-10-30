@@ -2,6 +2,7 @@
 import { Database } from "~/types/supabase";
 import { z } from "zod";
 import { Filter } from "~/types";
+import { TRADE_TYPES } from "~/types/constants";
 
 const client = useSupabaseClient<Database>();
 const params = useUrlSearchParams("history");
@@ -41,6 +42,8 @@ const { data: prices } = await useAsyncData(
     }
     if (filter.value.trade_type !== null) {
       query = query.eq("trade_type", filter.value.trade_type);
+    } else {
+      query = query.neq("trade_type", TRADE_TYPES.UNKNOWN);
     }
     if (filter.value.game_id !== undefined) {
       query = query.eq("game_id", filter.value.game_id);
@@ -67,6 +70,7 @@ const { data: trend } = await useAsyncData(
       .from("Price")
       .select("game_id, price, posted_at, condition, ptt_article_id")
       .eq("game_id", filter.value.game_id)
+      .neq("trade_type", TRADE_TYPES.UNKNOWN)
       .order("posted_at", { ascending: true });
     return result.data;
   },
