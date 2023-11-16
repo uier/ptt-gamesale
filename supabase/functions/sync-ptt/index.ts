@@ -3,7 +3,7 @@ import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { fetchNewArticles } from "./crawl.ts";
 import { type Article, type Price, processArticle } from "./lib.ts";
 
-const databaseUrl = Deno.env.get("TEMP_DB_URL")!;
+const databaseUrl = Deno.env.get("SUPABASE_DB_URL")!;
 const pool = new postgres.Pool(databaseUrl, 3, true);
 
 /*
