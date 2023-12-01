@@ -12,6 +12,5 @@ export const CONDITIONS = {
 
 export const MENU_ITEMS = [
   { path: "/", text: "查價" },
-  // { path: '/history', text: 'History' },
   { path: "/about", text: "關於" },
 ];
