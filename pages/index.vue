@@ -93,6 +93,11 @@ const focusedGameName = ref("");
 
 <template>
   <div class="h-full w-full pb-10">
+    <div role="alert" class="alert alert-info py-3 mb-4 px-2 md:px-6">
+      <Icon name="ion:information-circle-outline" class="h-5 w-5" />
+      <span>已暫停資料更新，最後更新時間為 2024/01/19 21:30</span>
+    </div>
+
     <PriceFilter v-model="filter" :games="games" :table-focused-game-name="focusedGameName" />
 
     <div class="my-3" />

@@ -17,6 +17,7 @@
     "@nuxtjs/google-fonts": "^3.0.1",
     "@nuxtjs/supabase": "^0.3.8",
     "@nuxtjs/tailwindcss": "^6.7.2",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/node": "^18",
     "@vueuse/core": "^10.2.0",
     "@vueuse/nuxt": "^10.2.0",
